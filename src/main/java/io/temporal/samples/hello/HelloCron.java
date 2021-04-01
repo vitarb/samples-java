@@ -76,6 +76,14 @@ public class HelloCron {
   static class GreetingActivitiesImpl implements GreetingActivities {
     @Override
     public void greet(String greeting) {
+      int attempt = Activity.getExecutionContext().getInfo().getAttempt();
+      if (attempt < 3) {
+        throw new IllegalStateException(
+            "Failing activity for "
+                + Activity.getExecutionContext().getInfo().getWorkflowId()
+                + " because execution attempt was "
+                + attempt);
+      }
       System.out.println(
           "From " + Activity.getExecutionContext().getInfo().getWorkflowId() + ": " + greeting);
     }
